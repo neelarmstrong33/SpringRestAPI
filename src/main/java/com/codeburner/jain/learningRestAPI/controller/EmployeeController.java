@@ -1,28 +1,34 @@
 package com.codeburner.jain.learningRestAPI.controller;
 
-import com.codeburner.jain.learningRestAPI.dto.EmployeeDTO;
+import com.codeburner.jain.learningRestAPI.entities.EmployeeEntity;
+import com.codeburner.jain.learningRestAPI.respositories.EmployeeRepository;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "/employees")
 public class EmployeeController {
 
+    private final EmployeeRepository employeeRepository;
+
+    public EmployeeController(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
+    }
+
     @GetMapping(path = "/{employeeId}")
-    public EmployeeDTO getEmployeeById(@PathVariable Long employeeId) {
-        return new EmployeeDTO(employeeId, "Sahil", "sahil@gmail.com", 26, LocalDate.of(2024,8,26), true);
+    public EmployeeEntity getEmployeeById(@PathVariable(name = "employeeId") Long id) {
+        return employeeRepository.findById(id).orElse(null);
     }
 
     @GetMapping
-    public String getAllEmployees(@RequestParam Integer age) {
-        return "Hi age "+age;
+    public List<EmployeeEntity> getAllEmployees() {
+        return employeeRepository.findAll();
     }
 
     @PostMapping
-    public String createNewEmployee() {
-        return "Hello from POST";
+    public EmployeeEntity createNewEmployee(@RequestBody EmployeeEntity inputEmployee) {
+        return employeeRepository.save(inputEmployee);
     }
 
     @PutMapping String updateEmployeeById(){
