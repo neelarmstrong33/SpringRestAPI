@@ -1,7 +1,9 @@
 package com.codeburner.jain.learningRestAPI.controller;
 
+import com.codeburner.jain.learningRestAPI.dto.EmployeeDTO;
 import com.codeburner.jain.learningRestAPI.entities.EmployeeEntity;
 import com.codeburner.jain.learningRestAPI.respositories.EmployeeRepository;
+import com.codeburner.jain.learningRestAPI.services.EmployeeService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,25 +12,26 @@ import java.util.List;
 @RequestMapping(path = "/employees")
 public class EmployeeController {
 
-    private final EmployeeRepository employeeRepository;
+    private final EmployeeService employeeService;
 
-    public EmployeeController(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
     }
 
+
     @GetMapping(path = "/{employeeId}")
-    public EmployeeEntity getEmployeeById(@PathVariable(name = "employeeId") Long id) {
-        return employeeRepository.findById(id).orElse(null);
+    public EmployeeDTO getEmployeeById(@PathVariable(name = "employeeId") Long id) {
+        return employeeService.getEmployeeById(id);
     }
 
     @GetMapping
-    public List<EmployeeEntity> getAllEmployees() {
-        return employeeRepository.findAll();
+    public List<EmployeeDTO> getAllEmployees() {
+        return employeeService.getAllEmployees();
     }
 
     @PostMapping
-    public EmployeeEntity createNewEmployee(@RequestBody EmployeeEntity inputEmployee) {
-        return employeeRepository.save(inputEmployee);
+    public EmployeeDTO createNewEmployee(@RequestBody EmployeeDTO inputEmployee) {
+        return employeeService.createNewEmployee(inputEmployee);
     }
 
     @PutMapping String updateEmployeeById(){
